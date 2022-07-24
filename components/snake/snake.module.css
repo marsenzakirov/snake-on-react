@@ -1,0 +1,11 @@
+.snake {
+  width: fit-content;
+  height: fit-content;
+}
+.snakePoint {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+  border-radius: 50%;
+}
