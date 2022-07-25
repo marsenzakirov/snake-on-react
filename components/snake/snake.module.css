@@ -9,3 +9,7 @@
   background-color: #000;
   border-radius: 50%;
 }
+.snakePoint:last-child {
+  background-color: rgb(0, 137, 0);
+  border-radius: 2px 4px 2px 1px;
+}

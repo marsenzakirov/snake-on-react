@@ -1,10 +1,10 @@
 import Head from "next/head";
-import Image from "next/image";
 import styles from "./index.module.css";
 import { Component, useState } from "react";
 import { useEffect, useRef } from "react";
 import Snake from "../components/snake/snake";
 import Food from "../components/food/food";
+import { useInterval } from "../hooks/useInterval";
 export default function Home() {
   const [dots, setDots] = useState([
     [0, 0],
@@ -13,14 +13,41 @@ export default function Home() {
     [3, 0],
   ]);
   const [coordinates, setCoordinates] = useState([]);
-  const [direction, setDirection] = useState("right");
-
+  const [direction, setDirection] = useState("");
+  const forward = useInterval(() => {
+    if (isBorder()) {
+      return;
+    }
+    if (direction == "up") {
+      setDots([
+        ...dots.slice(1),
+        [dots[dots.length - 1][0], dots[dots.length - 1][1] - 1],
+      ]);
+    }
+    if (direction == "down") {
+      setDots([
+        ...dots.slice(1),
+        [dots[dots.length - 1][0], dots[dots.length - 1][1] + 1],
+      ]);
+    }
+    if (direction == "left") {
+      setDots([
+        ...dots.slice(1),
+        [dots[dots.length - 1][0] - 1, dots[dots.length - 1][1]],
+      ]);
+    }
+    if (direction == "right") {
+      setDots([
+        ...dots.slice(1),
+        [dots[dots.length - 1][0] + 1, dots[dots.length - 1][1]],
+      ]);
+    }
+    if (eatFood(dots, coordinates)) {
+      setDots([...dots, [dots[dots.length - 1][0], dots[dots.length - 1][1]]]);
+    }
+  }, 120);
   useEffect(() => {
     randomCordinates(dots);
-    setInterval(() => {
-
-      console.log(direction);
-    }, 1000);
   }, []);
   function randomCordinates(dots) {
     const x = Math.floor(Math.random() * 20);
@@ -114,6 +141,21 @@ export default function Home() {
       }
       setDirection("right");
     }
+  };
+  const isBorder = () => {
+    if (direction == "up" && dots[dots.length - 1][1] === 0) {
+      return true;
+    }
+    if (direction == "down" && dots[dots.length - 1][1] === 39) {
+      return true;
+    }
+    if (direction == "left" && dots[dots.length - 1][0] === 0) {
+      return true;
+    }
+    if (direction == "right" && dots[dots.length - 1][0] === 39) {
+      return true;
+    }
+    return false;
   };
   return (
     <div className={styles.container}>
